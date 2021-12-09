@@ -19,7 +19,7 @@ e.g:
 
 This situation can be overcome in ASP.NET Core using custom contract resolver. Client can send request header `x-json-naming-strategy` and get the desire output.  
 
-Valid values for `x-json-naming-strategy` header are `camelCase`, `snack_case` and `kebab-case`.
+Valid values for `x-json-naming-strategy` header are `PascalCase`, `camelCase`, `snack_case` and `kebab-case`.
 
 If header not sent then `camelCase` will be used as default naming strategy.
 
@@ -105,6 +105,11 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 <br />
 
 # Output
+
+# PascalCase naming strategy
+![](./resources/PascalCase-naming-strategy.png)
+
+<br />
 
 # camelCase naming strategy
 ![](./resources/camelCase-naming-strategy.png)
