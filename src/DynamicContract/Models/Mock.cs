@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DynamicContract.Models
 {
@@ -10,7 +11,8 @@ namespace DynamicContract.Models
             {
                 Id = 1,
                 FirstName = "K . M. Mahabub Ali",
-                LastName = "Majumder"
+                LastName = "Majumder",
+                DOB = new DateTime(1971, 12, 16)
             }
         };
     }

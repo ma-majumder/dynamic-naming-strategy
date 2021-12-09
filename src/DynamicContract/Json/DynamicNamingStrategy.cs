@@ -86,6 +86,13 @@ namespace DynamicContract.Json
             return strategy.GetPropertyName(name, false);
         }
 
+        public override string GetPropertyName(string name, bool hasSpecifiedName)
+        {
+            // overwrite if the property has specified name.
+            // Note: property name must be PascalCase
+            return ResolvePropertyName(name);
+        }
+
         #region Helper
 
         private bool IsPascalCase(string name) => "PascalCase".Equals(name, StringComparison.OrdinalIgnoreCase);
