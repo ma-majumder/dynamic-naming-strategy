@@ -19,6 +19,7 @@ namespace DynamicContract.Json
         {
             var services = builder.Services;
 
+            services.AddSingleton<DefaultNamingStrategy>(); // PascalCase
             services.AddSingleton<CamelCaseNamingStrategy>();
             services.AddSingleton<SnakeCaseNamingStrategy>();
             services.AddSingleton<KebabCaseNamingStrategy>();

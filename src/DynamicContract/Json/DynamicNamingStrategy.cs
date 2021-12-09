@@ -13,18 +13,22 @@ namespace DynamicContract.Json
         private const string headerName = "x-json-naming-strategy";
 
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly DefaultNamingStrategy pascalCaseNamingStrategy;
         private readonly CamelCaseNamingStrategy camelCaseNamingStrategy;
         private readonly SnakeCaseNamingStrategy snakeCaseNamingStrategy;
         private readonly KebabCaseNamingStrategy kebabCaseNamingStrategy;
 
+
         public DynamicNamingStrategy(
             IHttpContextAccessor httpContextAccessor,
-            CamelCaseNamingStrategy camelCaseNamingStrategy, 
-            SnakeCaseNamingStrategy snakeCaseNamingStrategy, 
+            DefaultNamingStrategy pascalCaseNamingStrategy,
+            CamelCaseNamingStrategy camelCaseNamingStrategy,
+            SnakeCaseNamingStrategy snakeCaseNamingStrategy,
             KebabCaseNamingStrategy kebabCaseNamingStrategy
             )
         {
             this.httpContextAccessor = httpContextAccessor;
+            this.pascalCaseNamingStrategy = pascalCaseNamingStrategy;
             this.camelCaseNamingStrategy = camelCaseNamingStrategy;
             this.snakeCaseNamingStrategy = snakeCaseNamingStrategy;
             this.kebabCaseNamingStrategy = kebabCaseNamingStrategy;
@@ -43,7 +47,8 @@ namespace DynamicContract.Json
 
             if (string.IsNullOrWhiteSpace(name))
             {
-                return NamingStrategies.CamelCase;
+                // default casing
+                return "camelCase";
             }
 
             return name;
@@ -57,15 +62,20 @@ namespace DynamicContract.Json
         {
             var namingStrategyHeader = GetName();
 
-            if (NamingStrategies.IsSnakeCase(namingStrategyHeader))
+            if (IsPascalCase(namingStrategyHeader))
+            {
+                return pascalCaseNamingStrategy;
+            }
+            else if (IsSnakeCase(namingStrategyHeader))
             {
                 return snakeCaseNamingStrategy;
             }
-            else if (NamingStrategies.IsKebabCase(namingStrategyHeader))
+            else if (IsKebabCase(namingStrategyHeader))
             {
                 return kebabCaseNamingStrategy;
             }
 
+            // camel case is default for this system
             return camelCaseNamingStrategy;
         }
 
@@ -75,20 +85,13 @@ namespace DynamicContract.Json
 
             return strategy.GetPropertyName(name, false);
         }
+
+        #region Helper
+
+        private bool IsPascalCase(string name) => "PascalCase".Equals(name, StringComparison.OrdinalIgnoreCase);
+        private bool IsSnakeCase(string name) => "snake_case".Equals(name, StringComparison.OrdinalIgnoreCase);
+        private bool IsKebabCase(string name) => "kebab-case".Equals(name, StringComparison.OrdinalIgnoreCase);
+
+        #endregion Helper
     }
-
-    #region Helper
-
-    class NamingStrategies
-    {
-        public const string CamelCase = "camelCase";
-        public const string SnakeCase = "snake_case";
-        public const string KebabCase = "kebab-case";
-
-        public static bool IsCamelCase(string name) => CamelCase.Equals(name, StringComparison.OrdinalIgnoreCase);
-        public static bool IsSnakeCase(string name) => SnakeCase.Equals(name, StringComparison.OrdinalIgnoreCase);
-        public static bool IsKebabCase(string name) => KebabCase.Equals(name, StringComparison.OrdinalIgnoreCase);
-    }
-
-    #endregion Helper
 }
